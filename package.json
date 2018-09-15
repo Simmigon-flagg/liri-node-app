@@ -1,5 +1,5 @@
 {
-  "name": "liri-node-app",
+  "name": "homework-10",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,11 +10,14 @@
     "type": "git",
     "url": "git+https://github.com/Simmigon-flagg/liri-node-app.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Simmigon-flagg/liri-node-app/issues"
   },
-  "homepage": "https://github.com/Simmigon-flagg/liri-node-app#readme"
+  "homepage": "https://github.com/Simmigon-flagg/liri-node-app#readme",
+  "dependencies": {
+    "node-spotify-api": "^1.0.7",
+    "requests": "^0.2.2"
+  }
 }
