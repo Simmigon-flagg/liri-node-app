@@ -1,8 +1,13 @@
 require("dotenv").config();
 var request = require('request');
+var moment = require('moment');
+
 // Step 3
 var keys = require('./keys.js');
 var Spotify = require('node-spotify-api');
+var fs = require('fs');
+var log  = "";
+
 var spotify = new Spotify(keys.spotify);
 var apisearch = process.argv;
 var term = "";
@@ -27,22 +32,32 @@ var spotify = new Spotify({
 
 switch (apisearch[2]) {
   case "concert-this":
-    concert(term);
+  concert(term);
+ 
     break;
   case "spotify-this-song":
-    spotifySongs(term);
-
+     spotifySongs(term);
+    
     break;
   case "movie-this":
     movie(term);
+   
     break;
   case "do-what-it-says":
+   doAsISay();
+
     break;
   default:
     console.log("oops mistakes were made!");
 }
 
-
+function logsearch(logdata){
+  fs.appendFile('log.txt',logdata , function(err){
+    if (err) throw err;
+    console.log('The file has been updated/saved!');
+    });
+    
+}
 
 
 
@@ -54,7 +69,9 @@ function spotifySongs(songs) {
       preview_song: data.tracks.items[0].album.artists[0].external_urls.spotify,
       album: data.tracks.items[0].album.name
     }
-    console.log(songInfo);
+    log = JSON.stringify(songInfo);
+    logsearch(log + "\n");
+ 
 
     // console.log(JSON.stringify(temp, null, 2));
     if (err) {
@@ -76,12 +93,18 @@ function concert(artist) {
     body = JSON.parse(body, null, 2)
 
     //console.log('body:', body); // Print the HTML for the Google homepage.
+   
+
+
     var concertInfo = {
       venue_name: body[0].venue.name,
       city: body[0].venue.city,
-      Time: body[0].datetime
+      Time: moment(body[0].datetime).format("MM/DD/YYYY")
     }
     console.log(concertInfo);
+    log = JSON.stringify(concertInfo);
+    logsearch(log + "\n");
+ 
   });
 }
 
@@ -115,6 +138,15 @@ function movie(title) {
       Actors: body.Actors
     }
     console.log(movieInfo);
+    log = JSON.stringify(movieInfo);
+    logsearch(log + "\n");
   });
 }
+function doAsISay() {
 
+  fs.readFile('./random.txt', function (err, data) {
+    if (err) throw err;
+    data = data.toString().split(",");
+    spotifySongs(data[1]);
+  });
+}
